@@ -1,0 +1,46 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+      - dev
+env:
+  MONGO_DB_NAME: gh-demo
+jobs:
+  test:
+    env: # environment variables specified withing job are only accessible to the job
+      MONGO_DB_CLUSTER: cluster0.ogau56x.mongodb.net
+      MONGO_BD_USER: nkemjikaohanyere
+      MONGO_BD_PASSWORD: UwRLDkV1uRuJOzmn
+      PORT: 8080
+    environment: testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run server
+        run: npm start & npx wait-on http://127.0.0.1:$PORT # get the port from env variable
+
+      - name: Run tests
+        run: npm test
+
+      - name: Output information
+        run: echo "${{ env.MONGO_BD_USER }}"
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        run: |
+          echo "${{ env.MONGO_BD_USER }}" # should not be available
+          echo "${{ env.MONGO_DB_NAME}}"
