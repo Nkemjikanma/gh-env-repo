@@ -10,8 +10,8 @@ jobs:
   test:
     env: # environment variables specified withing job are only accessible to the job
       MONGO_DB_CLUSTER: cluster0.ogau56x.mongodb.net
-      MONGO_BD_USER: nkemjikaohanyere
-      MONGO_BD_PASSWORD: UwRLDkV1uRuJOzmn
+      MONGO_BD_USER: ${{ secrets.MONGO_BD_USER }}
+      MONGO_BD_PASSWORD: ${{ secrets.UwRLDkV1uRuJOzmn }}
       PORT: 8080
     environment: testing
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
 
       - name: Output information
         run: |
-          echo "${{ env.MONGO_BD_USER }}"
+           echo "MONGODB_USERNAME: $MONGODB_USERNAME"
   deploy:
     needs: test
     runs-on: ubuntu-latest
