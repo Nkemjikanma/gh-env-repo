@@ -35,7 +35,8 @@ jobs:
         run: npm test
 
       - name: Output information
-        run: echo "${{ env.MONGO_BD_USER }}"
+        run: |
+          echo "${{ env.MONGO_BD_USER }}"
   deploy:
     needs: test
     runs-on: ubuntu-latest
